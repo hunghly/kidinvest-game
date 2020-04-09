@@ -49,7 +49,6 @@
                     }
                 ];
 
-
                 this.buyers = [
                     {
                         key: 'buyer1'
@@ -118,6 +117,48 @@
                         key: 'buyer22'
                     }
                 ]
+
+                this.emotions = [
+                    {
+                        key: 'angry'
+                    },
+                    {
+                        key: 'blueberry'
+                    },
+                    {
+                        key: 'deciding'
+                    },
+                    {
+                        key: 'drop'
+                    },
+                    {
+                        key: 'lemon'
+                    },
+                    {
+                        key: 'money'
+                    },
+                    {
+                        key: 'peace'
+                    },
+                    {
+                        key: 'peach'
+                    },
+                    {
+                        key: 'point'
+                    },
+                    {
+                        key: 'raspberry'
+                    },
+                    {
+                        key: 'strawberry'
+                    },
+                    {
+                        key: 'superhappy'
+                    },
+                    {
+                        key: 'wave'
+                    }
+                ]
             };
 
             gameScene.preload = function preload() {
@@ -173,6 +214,17 @@
 
             gameScene.create = function create() {
                 this.add.sprite(0, 0, 'background').setOrigin(0, 0);
+
+                // this.sellers = this.add.group(this.kids);
+                // this.sellers.setDepth(1);
+                // let sellers = this.sellers.getChildren();
+                //
+                // for (let i = 0; i < sellers.length; i++) {
+                //     let seller = seller[i];
+                //
+                // }
+
+
                 // this.add.sprite(210, 470, 'gabe');
                 this.add.sprite(this.kidX, this.kidY, 'kid1');
 
