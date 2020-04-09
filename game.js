@@ -22,10 +22,100 @@
                 // this.standBoundsY = 170;
                 this.buyerSpeed = 1.5;
                 this.totalEarnings = 0;
+                this.kids = [
+                    {
+                        key: 'kid1'
+                    },
+                    {
+                        key: 'kid2'
+                    },
+                    {
+                        key: 'kid3'
+                    },
+                    {
+                        key: 'kid4'
+                    },
+                    {
+                        key: 'kid5'
+                    },
+                    {
+                        key: 'kid6'
+                    },
+                    {
+                        key: 'kid7'
+                    },
+                    {
+                        key: 'kid8'
+                    }
+                ];
+
+
                 this.buyers = [
                     {
-                        key: 'buyer-m-1',
-                        img: 'buyer-m-1.png'
+                        key: 'buyer1'
+                    },
+                    {
+                        key: 'buyer2'
+                    },
+                    {
+                        key: 'buyer3'
+                    },
+                    {
+                        key: 'buyer4'
+                    },
+                    {
+                        key: 'buyer5'
+                    },
+                    {
+                        key: 'buyer6'
+                    },
+                    {
+                        key: 'buyer7'
+                    },
+                    {
+                        key: 'buyer8'
+                    },
+                    {
+                        key: 'buyer9'
+                    },
+                    {
+                        key: 'buyer10'
+                    },
+                    {
+                        key: 'buyer11'
+                    },
+                    {
+                        key: 'buyer12'
+                    },
+                    {
+                        key: 'buyer13'
+                    },
+                    {
+                        key: 'buyer14'
+                    },
+                    {
+                        key: 'buyer15'
+                    },
+                    {
+                        key: 'buyer16'
+                    },
+                    {
+                        key: 'buyer17'
+                    },
+                    {
+                        key: 'buyer18'
+                    },
+                    {
+                        key: 'buyer19'
+                    },
+                    {
+                        key: 'buyer20'
+                    },
+                    {
+                        key: 'buyer21'
+                    },
+                    {
+                        key: 'buyer22'
                     }
                 ]
             };
@@ -35,7 +125,13 @@
                 this.load.image('background', 'assets/background-loaded.png');
                 // Kids
                 this.load.spritesheet('kid1', 'assets/kids/kid-f-1.png', {frameWidth: 32, frameHeight: 32});
-
+                this.load.spritesheet('kid2', 'assets/kids/kid-f-2.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid3', 'assets/kids/kid-f-3.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid4', 'assets/kids/kid-f-4.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid5', 'assets/kids/kid-m-1.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid6', 'assets/kids/kid-m-2.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid7', 'assets/kids/kid-m-3.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('kid8', 'assets/kids/kid-m-4.png', {frameWidth: 32, frameHeight: 32});
                 // Female Buyers
                 this.load.spritesheet('buyer1', 'assets/buyers/buyer-f-1.png', {frameWidth: 32, frameHeight: 32});
                 this.load.spritesheet('buyer2', 'assets/buyers/buyer-f-2.png', {frameWidth: 32, frameHeight: 32});
@@ -80,16 +176,12 @@
                 // this.add.sprite(210, 470, 'gabe');
                 this.add.sprite(this.kidX, this.kidY, 'kid1');
 
-
                 this.buyer1 = this.physics.add.sprite(this.buyerStartX, this.buyerStartY, 'buyer1');
                 this.buyer2 = this.physics.add.sprite(190, 450, 'buyer2');
                 this.buyer1.walkedUp = false;
                 this.buyer1.walkedLeft = false;
                 this.buyer1.didTransaction = false;
                 this.buyer1.doneDeciding = false;
-
-
-                // this.buyer1.setCollideWorldBounds(true);
 
                 this.anims.create({
                         key: 'down',
