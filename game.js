@@ -132,10 +132,6 @@
                     repeat: -1
                 });
 
-                // this.scoreText = this.add.text(16, 16, 'Total Earnings: 0', {
-                //     fontSize: '32px', fill: '#000'
-                // });
-
                 this.earningsText = this.add.text(0, 0, 'Total Earnings($): 0', {
                     fontFamily: 'Courier',
                     fontSize: 28,
@@ -161,36 +157,35 @@
 
             gameScene.update = function update() {
                 this.walkPath(this.buyer1);
-
             };
 
-            gameScene.walkPath = function () {
+            gameScene.walkPath = function (buyer) {
                 // walk up y:190 is in front of stand, if he has not walked up
-                if (!this.buyer1.walkedUp) {
-                    this.walkForward(this.buyer1);
+                if (!buyer.walkedUp) {
+                    this.walkForward(buyer);
                     console.log("walking up");
                 }
                 // buyer.walkedUp = true at this point
 
                 // Do transaction
-                if (this.buyer1.walkedUp && !this.buyer1.boughtLemonade && !this.buyer1.gotAngry) {
-                    this.doTransaction(this.buyer1);
+                if (buyer.walkedUp && !buyer.boughtLemonade && !buyer.gotAngry) {
+                    this.doTransaction(buyer);
                     console.log("buying");
                 }
                 // buyer.boughtLemonade = true at this point
 
                 // Once he walked up, he can walk left to start leaving
-                if (this.buyer1.walkedUp && (this.buyer1.boughtLemonade || this.buyer1.gotAngry) && !this.buyer1.walkedLeft) {
-                    // this.time.delayedCall(2000, function() {
-                        this.walkLeft(this.buyer1);
+                if (buyer.walkedUp && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedLeft) {
+                    // buyer.time.delayedCall(2000, function() {
+                        this.walkLeft(buyer);
                     //     console.log("walking left");
                     // }, [], this);
                 }
                 // buyer.walkedLeft = true at this point
 
                 // Walk back and exit scene
-                if (this.buyer1.walkedUp && this.buyer1.walkedLeft && (this.buyer1.boughtLemonade || this.buyer1.gotAngry) && !this.buyer1.walkedBack) {
-                    this.walkBack(this.buyer1);
+                if (buyer.walkedUp && buyer.walkedLeft && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedBack) {
+                    this.walkBack(buyer);
                     console.log("walking back");
                 }
             };
