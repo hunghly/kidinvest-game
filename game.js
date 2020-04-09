@@ -22,14 +22,45 @@
                 // this.standBoundsY = 170;
                 this.buyerSpeed = 1.5;
                 this.totalEarnings = 0;
+                this.buyers = [
+                    {
+                        key: 'buyer-m-1',
+                        img: 'buyer-m-1.png'
+                    }
+                ]
             };
 
             gameScene.preload = function preload() {
+                // Background
                 this.load.image('background', 'assets/background-loaded.png');
-                // this.load.spritesheet('gabe', 'assets/gabe.png', {frameWidth: 24, frameHeight: 24});
+                // Kids
                 this.load.spritesheet('kid1', 'assets/kids/kid-f-1.png', {frameWidth: 32, frameHeight: 32});
-                this.load.spritesheet('buyer1', 'assets/buyers/buyer-f-2.png', {frameWidth: 32, frameHeight: 32});
-                this.load.spritesheet('buyer2', 'assets/buyers/buyer-m-1.png', {frameWidth: 32, frameHeight: 32});
+
+                // Female Buyers
+                this.load.spritesheet('buyer1', 'assets/buyers/buyer-f-1.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer2', 'assets/buyers/buyer-f-2.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer3', 'assets/buyers/buyer-f-3.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer4', 'assets/buyers/buyer-f-4.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer5', 'assets/buyers/buyer-f-5.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer6', 'assets/buyers/buyer-f-6.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer7', 'assets/buyers/buyer-f-7.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer8', 'assets/buyers/buyer-f-8.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer9', 'assets/buyers/buyer-f-9.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer10', 'assets/buyers/buyer-f-10.png', {frameWidth: 32, frameHeight: 32});
+                // Male Buyers
+                this.load.spritesheet('buyer11', 'assets/buyers/buyer-m-1.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer12', 'assets/buyers/buyer-m-2.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer13', 'assets/buyers/buyer-m-3.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer14', 'assets/buyers/buyer-m-4.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer15', 'assets/buyers/buyer-m-5.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer16', 'assets/buyers/buyer-m-6.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer17', 'assets/buyers/buyer-m-7.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer18', 'assets/buyers/buyer-m-8.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer19', 'assets/buyers/buyer-m-9.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer20', 'assets/buyers/buyer-m-10.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer21', 'assets/buyers/buyer-m-11.png', {frameWidth: 32, frameHeight: 32});
+                this.load.spritesheet('buyer22', 'assets/buyers/buyer-m-12.png', {frameWidth: 32, frameHeight: 32});
+                // Load emotions
                 this.load.image('angry', 'assets/emotions/angry.png');
                 this.load.image('blueberry', 'assets/emotions/blueberry.png');
                 this.load.image('deciding', 'assets/emotions/deciding.png');
@@ -42,10 +73,6 @@
                 this.load.image('wave', 'assets/emotions/wave.png');
                 this.load.image('money', 'assets/emotions/money.png');
                 this.load.image('drop', 'assets/emotions/drop.png');
-                // this.load.setBaseURL('http://labs.phaser.io');
-                // this.load.image('sky', 'assets/skies/space3.png');
-                // this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-                // this.load.image('red', 'assets/particles/red.png');
             };
 
             gameScene.create = function create() {
@@ -202,6 +229,7 @@
                     // buyer.setVelocityY(0);
                     // remove sprite once exited scene
                     this.buyerEmotion.alpha = 0;
+                    this.sellerEmotion.alpha = 0;
                     buyer.disableBody(true, true);
                     buyer.walkedBack = true;
                 }
@@ -235,7 +263,7 @@
                             this.sellerEmotion.setTexture('superhappy');
                             this.buyerEmotion.setTexture('wave');
                             // this.tween.restart();
-                            this.time.delayedCall(3000, function () {
+                            this.time.delayedCall(2000, function () {
                                 this.sellerEmotion.setTexture('peace');
                             }, [], this);
                             this.increaseEarnings(5);
