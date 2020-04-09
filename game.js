@@ -20,7 +20,7 @@
                 this.buyerStartY = 480;
                 // this.standBoundsX = 160;
                 // this.standBoundsY = 170;
-                this.buyerSpeed = 70;
+                this.buyerSpeed = 1.5;
                 this.totalEarnings = 0;
             };
 
@@ -41,6 +41,7 @@
                 this.load.image('superhappy', 'assets/emotions/superhappy.png');
                 this.load.image('wave', 'assets/emotions/wave.png');
                 this.load.image('money', 'assets/emotions/money.png');
+                this.load.image('drop', 'assets/emotions/drop.png');
                 // this.load.setBaseURL('http://labs.phaser.io');
                 // this.load.image('sky', 'assets/skies/space3.png');
                 // this.load.image('logo', 'assets/sprites/phaser3-logo.png');
@@ -115,7 +116,20 @@
                     backgroundColor: 'rgba(255, 178, 2, .7)'
                 });
 
-
+                this.buyerEmotion = this.add.sprite(220, 165, 'deciding');
+                this.sellerEmotion = this.add.sprite(200, 120, 'money');
+                this.sellerEmotion.setInteractive();
+                this.tween = this.tweens.add({
+                    targets: this.sellerEmotion,
+                    scaleX: 1.2,
+                    scaleY: 1.2,
+                    duration: 500,
+                    paused: true,
+                    loop: 10,
+                    yoyo: true
+                });
+                this.buyerEmotion.alpha = 0;
+                this.sellerEmotion.alpha = 0;
             };
 
             gameScene.update = function update() {
@@ -132,21 +146,23 @@
                 // buyer.walkedUp = true at this point
 
                 // Do transaction
-                if (this.buyer1.walkedUp && !this.buyer1.boughtLemonade) {
+                if (this.buyer1.walkedUp && !this.buyer1.boughtLemonade && !this.buyer1.gotAngry) {
                     this.doTransaction(this.buyer1);
                     console.log("buying");
                 }
                 // buyer.boughtLemonade = true at this point
 
                 // Once he walked up, he can walk left to start leaving
-                if (this.buyer1.walkedUp && this.buyer1.boughtLemonade && !this.buyer1.walkedLeft) {
-                    this.walkLeft(this.buyer1);
-                    console.log("walking left");
+                if (this.buyer1.walkedUp && (this.buyer1.boughtLemonade || this.buyer1.gotAngry) && !this.buyer1.walkedLeft) {
+                    // this.time.delayedCall(2000, function() {
+                        this.walkLeft(this.buyer1);
+                    //     console.log("walking left");
+                    // }, [], this);
                 }
                 // buyer.walkedLeft = true at this point
 
                 // Walk back and exit scene
-                if (this.buyer1.walkedUp && this.buyer1.walkedLeft && this.buyer1.boughtLemonade && !this.buyer1.walkedBack) {
+                if (this.buyer1.walkedUp && this.buyer1.walkedLeft && (this.buyer1.boughtLemonade || this.buyer1.gotAngry) && !this.buyer1.walkedBack) {
                     this.walkBack(this.buyer1);
                     console.log("walking back");
                 }
@@ -156,10 +172,9 @@
             gameScene.walkForward = function (buyer) {
                 if (buyer.y >= this.frontStandY) {
                     buyer.anims.play('up', true);
-                    buyer.setVelocityY(-this.buyerSpeed);
+                    buyer.y -= this.buyerSpeed;
                 }
                 if (buyer.y <= this.frontStandY) {
-                    buyer.setVelocityY(0);
                     buyer.anims.play('up');
                     buyer.walkedUp = true;
                 }
@@ -168,23 +183,25 @@
             // Buyer walking left
             gameScene.walkLeft = function (buyer) {
                 if (buyer.x >= 190) {
+                    this.buyerEmotion.x -= this.buyerSpeed;
                     buyer.anims.play('left', true);
-                    buyer.setVelocityX(-this.buyerSpeed);
+                    buyer.x -= this.buyerSpeed;
                 }
                 if (buyer.x <= 190) {
-                    buyer.setVelocityX(0);
                     buyer.walkedLeft = true;
                 }
             };
             // Buyer walking back
             gameScene.walkBack = function (buyer) {
                 if (buyer.y <= 480) {
+                    this.buyerEmotion.y += this.buyerSpeed;
                     buyer.anims.play('down', true);
-                    buyer.setVelocityY(this.buyerSpeed);
+                    buyer.y += this.buyerSpeed;
                 }
                 if (buyer.y >= 480) {
-                    buyer.setVelocityY(0);
+                    // buyer.setVelocityY(0);
                     // remove sprite once exited scene
+                    this.buyerEmotion.alpha = 0;
                     buyer.disableBody(true, true);
                     buyer.walkedBack = true;
                 }
@@ -195,49 +212,58 @@
 
                 // do thinking
                 if (!buyer.doneDeciding) {
-                    buyer.buyerEmotion = this.add.sprite(220, 165, 'deciding');
+                    this.buyerEmotion.alpha = 1;
                     this.time.delayedCall(3000, function () {
                         buyer.doneDeciding = true;
                     }, [], this);
+                    console.log("deciding");
                 }
 
-                if (buyer.doneDeciding && !buyer.boughtLemonade) {
-                    buyer.buyerEmotion.setTexture('lemon');
-                    if (this.sellerEmotion === undefined) {
-                        this.sellerEmotion = this.add.sprite(200, 120, 'money');
-                        this.sellerEmotion.setInteractive();
-                        this.tween = this.tweens.add({
-                            targets: this.sellerEmotion,
-                            scaleX: 1.2,
-                            scaleY: 1.2,
-                            duration: 500,
-                            paused: true,
-                            loop: 10,
-                            yoyo: true
-                        });
+                if (buyer.doneDeciding && !buyer.boughtLemonade && !buyer.gotAngry) {
+                    this.buyerEmotion.setTexture('lemon');
+                    this.sellerEmotion.alpha = 1;
+                    // if (this.sellerEmotion !== undefined) {
+                    //
                         this.tween.play();
-                    }
+                    // }
 
                     // if buyer has not bought a lemonade then wait until he purchases one
-                    if (!buyer.boughtLemonade) {
+                    if (!buyer.boughtLemonade && !buyer.gotAngry) {
                         // sold a lemonade
                         this.sellerEmotion.on('pointerdown', function (pointer) {
                             // stop the seller's emotion
                             this.sellerEmotion.setTexture('superhappy');
-                            buyer.buyerEmotion.setTexture('wave');
+                            this.buyerEmotion.setTexture('wave');
                             // this.tween.restart();
                             this.time.delayedCall(3000, function () {
                                 this.sellerEmotion.setTexture('peace');
                             }, [], this);
-                            this.totalEarnings += 5.00;
-                            this.earningsText.setText('Total Earnings($): ' + this.totalEarnings);
+                            this.increaseEarnings(5);
                             buyer.boughtLemonade = true;
-                        }, this);
+                        }, gameScene);
+
+                        // if 10 seconds pass and user did not click the money button, then seller leaves angry
+                        this.time.delayedCall(10000, function() {
+                            if (!buyer.boughtLemonade) {
+                                console.log("im angry");
+                                this.sellerEmotion.setTexture('drop');
+                                this.buyerEmotion.setTexture('angry');
+                                buyer.gotAngry = true;
+                            }
+                            // else {
+                            //     console.log("i'm good");
+                            // }
+                        }, [], gameScene);
+
                     }
 
 
                 }
 
+            };
+
+            gameScene.increaseEarnings = function (earnings) {
+                this.earningsText.setText('Total Earnings($): ' + (this.totalEarnings + earnings));
             };
 
             gameScene.doThinking = function (buyer) {
