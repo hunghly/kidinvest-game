@@ -18,12 +18,17 @@
                 this.frontStandY = 200;
                 this.buyerStartX = 220;
                 this.buyerStartY = 480;
-                this.buyer = null;
-                // this.standBoundsX = 160;
-                // this.standBoundsY = 170;
+                this.sellerEmotionX = 200;
+                this.sellerEmotionY = 120;
+                this.buyerEmotionX = 220;
+                this.buyerEmotionY = 165;
+                this.counter = 0;
+                this.buyerChoice = null;
+                this.buyerChoiceId = null;
                 this.buyerSpeed = 1.5;
                 this.generatedBuyer = false;
                 this.game.globals = new Map();
+
                 this.totalEarnings = 0;
                 this.kids = [
                     {
@@ -162,6 +167,37 @@
                         key: 'wave'
                     }
                 ]
+                // regular lemons are 3x more likely to be chosen during randomizing.
+                this.lemonades = [
+                    {
+                        key: 'lemon',
+                        price: 4.0
+                    },
+                    {
+                        key: 'lemon',
+                        price: 4.0
+                    },
+                    {
+                        key: 'lemon',
+                        price: 4.0
+                    },
+                    {
+                        key: 'strawberry',
+                        price: 4.5
+                    },
+                    {
+                        key: 'raspberry',
+                        price: 6.5
+                    },
+                    {
+                        key: 'peach',
+                        price: 5.5
+                    },
+                    {
+                        key: 'blueberry',
+                        price: 5.5
+                    }
+                ]
 
                 // let people;
                 // let id;
@@ -211,6 +247,7 @@
                 this.load.image('deciding', 'assets/emotions/deciding.png');
                 this.load.image('lemon', 'assets/emotions/lemon.png');
                 this.load.image('peace', 'assets/emotions/peace.png');
+                this.load.image('peach', 'assets/emotions/peach.png');
                 this.load.image('point', 'assets/emotions/point.png');
                 this.load.image('raspberry', 'assets/emotions/raspberry.png');
                 this.load.image('strawberry', 'assets/emotions/strawberry.png');
@@ -222,62 +259,17 @@
 
             gameScene.create = function create() {
                 this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-
-                // this.sellers = this.add.group(this.kids);
-                // this.sellers.setDepth(1);
-                // let sellers = this.sellers.getChildren();
-                //
-                // for (let i = 0; i < sellers.length; i++) {
-                //     let seller = seller[i];
-                //
-                // }
-
-                /*this.emotions = this.add.group(this.icons);
-                this.emotions.setDepth(1);
-                let emotions = this.emotions.getChildren();
-                for (let i = 0; i < emotions.length; i++) {
-                    let emotion = emotions[i];
-                    emotion.setInteractive();
-                    emotion.tween = this.tweens.add({
-                        targets: emotion,
-                        scaleX: 1.2,
-                        scaleY: 1.2,
-                        duration: 500,
-                        paused: true,
-                        loop: 10,
-                        yoyo: true
-                    });
-                    emotion.on('pointerdown', function (pointer) {
-                        // stop the seller's emotion
-                        emotion.setTexture('superhappy');
-                        // this.buyerEmotion.setTexture('wave');
-                        // this.tween.restart();
-                        this.time.delayedCall(2000, function () {
-                            emotion.setTexture('peace');
-                        }, [], this);
-                        // this.increaseEarnings(5);
-                        // buyer.boughtLemonade = true;
-
-                    });
-                    emotion.alpha = 0;
-                }
-    */
-
-                // this.buyers = this.add.group(this.people);
-                // this.buyers.setDepth(1);
-                // console.log(this.people[0].key);
-                // console.log(this.buyers.getChildren.length);
-                // this.buyers = this.add.group(this.people).getChildren();
-                //
                 for (let i = 0; i < this.people.length; i++) {
                     let buyer = this.people[i];
-                    // console.log(buyer.key);
                     this.game.globals.set(buyer.key, this.add.sprite(30 * (i + 1), 30 * (i + 1), buyer.key));
                     this.game.globals.get(buyer.key).alpha = 0;
                     this.game.globals.get(buyer.key).walkedUp = false;
                     this.game.globals.get(buyer.key).walkedLeft = false;
+                    this.game.globals.get(buyer.key).walkedBack = false;
                     this.game.globals.get(buyer.key).didTransaction = false;
                     this.game.globals.get(buyer.key).doneDeciding = false;
+                    this.game.globals.get(buyer.key).boughtLemonade = false;
+                    this.game.globals.get(buyer.key).gotAngry = false;
                     this.anims.create({
                             key: buyer.key + 'down',
                             frames: this.anims.generateFrameNumbers(buyer.key, {
@@ -319,62 +311,9 @@
                         repeat: -1
                     });
                 }
-                // console.log(this.buyers[12]);
-                // this.buyers[12].x = 150;
-                // this.buyers[12].y = 150;
-                // this.add.sprite(150, 150, this.buyers[12].key);
-
 
                 // this.add.sprite(210, 470, 'gabe');
                 this.add.sprite(this.kidX, this.kidY, 'kid1');
-
-                // this.buyer1 = this.physics.add.sprite(this.buyerStartX, this.buyerStartY, 'buyer1');
-                // this.buyer2 = this.physics.add.sprite(190, 450, 'buyer2');
-                // this.buyer1.walkedUp = false;
-                // this.buyer1.walkedLeft = false;
-                // this.buyer1.didTransaction = false;
-                // this.buyer1.doneDeciding = false;
-
-                // this.anims.create({
-                //         key: 'down',
-                //         frames: this.anims.generateFrameNumbers('buyer1', {
-                //             start: 0,
-                //             end: 2
-                //         }),
-                //         frameRate: 10,
-                //         repeat: -1
-                //     }
-                // );
-                //
-                // this.anims.create({
-                //     key: 'left',
-                //     frames: this.anims.generateFrameNumbers('buyer1', {
-                //         start: 3,
-                //         end: 5
-                //     }),
-                //     frameRate: 10,
-                //     repeat: -1
-                // });
-                //
-                // this.anims.create({
-                //     key: 'right',
-                //     frames: this.anims.generateFrameNumbers('buyer1', {
-                //         start: 6,
-                //         end: 8
-                //     }),
-                //     frameRate: 10,
-                //     repeat: -1
-                // });
-                //
-                // this.anims.create({
-                //     key: 'up',
-                //     frames: this.anims.generateFrameNumbers('buyer1', {
-                //         start: 9,
-                //         end: 11
-                //     }),
-                //     frameRate: 10,
-                //     repeat: -1
-                // });
 
                 this.earningsText = this.add.text(0, 0, 'Total Earnings($): 0', {
                     fontFamily: 'Courier',
@@ -383,8 +322,9 @@
                     backgroundColor: 'rgba(255, 178, 2, .7)'
                 });
 
-                this.buyerEmotion = this.add.sprite(220, 165, 'deciding');
-                this.sellerEmotion = this.add.sprite(200, 120, 'money');
+
+                this.buyerEmotion = this.add.sprite(this.buyerEmotionX, this.buyerEmotionY, 'deciding');
+                this.sellerEmotion = this.add.sprite(this.sellerEmotionX, this.sellerEmotionY, 'money');
                 this.sellerEmotion.setInteractive();
                 this.tween = this.tweens.add({
                     targets: this.sellerEmotion,
@@ -412,56 +352,66 @@
             }
 
 
-             gameScene.generateBuyer = function () {
-                 // if there is no generated buyer, then generate a random one
+            gameScene.generateBuyer = function () {
+                // if there is no generated buyer, then generate a random one
+                if (!this.generatedBuyer) {
+                    console.log("generating player");
+                    let people = this.people;
+                    let id = Math.floor(Math.random() * people.length);
+                    this.key = people[id].key;
+                    console.log("here");
+                    console.log(this.key);
+                    console.log(this.game.globals.get(this.key));
+                    // RESET THE BUYER STATUS
+                    this.game.globals.get(this.key).alpha = 1;
+                    this.game.globals.get(this.key).walkedUp = false;
+                    this.game.globals.get(this.key).walkedLeft = false;
+                    this.game.globals.get(this.key).walkedBack = false;
+                    this.game.globals.get(this.key).didTransaction = false;
+                    this.game.globals.get(this.key).doneDeciding = false;
+                    this.game.globals.get(this.key).boughtLemonade = false;
+                    this.game.globals.get(this.key).gotAngry = false;
+                    this.game.globals.get(this.key).x = this.buyerStartX;
+                    this.game.globals.get(this.key).y = this.buyerStartY;
+                    this.buyerEmotion.x = this.buyerEmotionX;
+                    this.buyerEmotion.y = this.buyerEmotionY;
+                    this.counter = 0;
 
-                 if (!this.generatedBuyer) {
-                     console.log("generating player");
-                     let people = this.people;
-                     let id = Math.floor(Math.random() * people.length);
-                     this.key = people[id].key;
-                     console.log("here");
-                     console.log(this.key);
-                     console.log(this.game.globals.get(this.key));
-                     this.game.globals.get(this.key).alpha = 1;
-                     this.game.globals.get(this.key).x = this.buyerStartX;
-                     this.game.globals.get(this.key).y = this.buyerStartY;
-
-                 }
-
-                 // user was generated
-                 this.generatedBuyer = true;
-                 // }
-             }
+                }
+                // user was generated
+                this.generatedBuyer = true;
+            }
 
             gameScene.walkPath = function (buyer) {
                 // walk up y:190 is in front of stand, if he has not walked up
                 if (!buyer.walkedUp) {
                     this.walkForward(buyer);
-                    // console.log("walking up");
+                    console.log("walking up");
                 }
                 // buyer.walkedUp = true at this point
 
                 // Do transaction
                 if (buyer.walkedUp && !buyer.boughtLemonade && !buyer.gotAngry) {
                     this.doTransaction(buyer);
-                    // console.log("buying");
+                    console.log("buying");
+                }
+
+                if (buyer.walkedUp && buyer.boughtLemonade && !buyer.walkedLeft && this.counter === 1) {
+                    this.totalEarnings += this.increaseEarnings(this.lemonades[this.buyerChoiceId].price);
                 }
                 // buyer.boughtLemonade = true at this point
 
                 // Once he walked up, he can walk left to start leaving
                 if (buyer.walkedUp && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedLeft) {
-                    // buyer.time.delayedCall(2000, function() {
                     this.walkLeft(buyer);
-                    //     console.log("walking left");
-                    // }, [], this);
+                    console.log("walking left");
                 }
                 // buyer.walkedLeft = true at this point
 
                 // Walk back and exit scene
                 if (buyer.walkedUp && buyer.walkedLeft && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedBack) {
                     this.walkBack(buyer);
-                    // console.log("walking back");
+                    console.log("walking back");
                 }
             };
 
@@ -496,7 +446,6 @@
                     buyer.y += this.buyerSpeed;
                 }
                 if (buyer.y >= 480) {
-                    // buyer.setVelocityY(0);
                     // remove sprite once exited scene
                     this.buyerEmotion.alpha = 0;
                     this.sellerEmotion.alpha = 0;
@@ -513,25 +462,27 @@
 
                 // do thinking
                 if (!buyer.doneDeciding) {
+                    this.buyerEmotion.setTexture('deciding');
                     this.buyerEmotion.alpha = 1;
+
                     this.time.delayedCall(3000, function () {
                         buyer.doneDeciding = true;
                     }, [], this);
                     // console.log("deciding");
                 }
 
-                if (buyer.doneDeciding && !buyer.boughtLemonade && !buyer.gotAngry) {
-                    this.buyerEmotion.setTexture('lemon');
+                if (buyer.doneDeciding && !buyer.boughtLemonade && !buyer.gotAngry && this.counter === 0) {
+                    this.counter++;
+                    this.doThinking();
+                    this.sellerEmotion.setTexture('money');
+                    this.buyerEmotion.setTexture(this.buyerChoice);
                     this.sellerEmotion.alpha = 1;
-                    // if (this.sellerEmotion !== undefined) {
-                    //
                     this.tween.play();
-                    // }
-
                     // if buyer has not bought a lemonade then wait until he purchases one
                     if (!buyer.boughtLemonade && !buyer.gotAngry) {
                         // sold a lemonade
                         this.sellerEmotion.on('pointerdown', function (pointer) {
+                            // console.log("clicked money");
                             // stop the seller's emotion
                             this.sellerEmotion.setTexture('superhappy');
                             this.buyerEmotion.setTexture('wave');
@@ -539,7 +490,6 @@
                             this.time.delayedCall(2000, function () {
                                 this.sellerEmotion.setTexture('peace');
                             }, [], this);
-                            this.increaseEarnings(5);
                             buyer.boughtLemonade = true;
                         }, gameScene);
 
@@ -555,20 +505,22 @@
                             //     console.log("i'm good");
                             // }
                         }, [], gameScene);
-
                     }
-
-
                 }
 
             };
 
             gameScene.increaseEarnings = function (earnings) {
                 this.earningsText.setText('Total Earnings($): ' + (this.totalEarnings + earnings));
+                this.counter++;
+                return earnings;
             };
 
-            gameScene.doThinking = function (buyer) {
-
+            gameScene.doThinking = function () {
+                let id = Math.floor(Math.random() * 7);
+                this.buyerChoice = this.lemonades[id].key;
+                this.buyerChoiceId = id;
+                console.log(this.buyerChoice.key + " id: " + id);
             };
 
             gameScene.doSelection = function (buyer) {
