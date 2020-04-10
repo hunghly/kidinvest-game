@@ -18,9 +18,12 @@
                 this.frontStandY = 200;
                 this.buyerStartX = 220;
                 this.buyerStartY = 480;
+                this.buyer = null;
                 // this.standBoundsX = 160;
                 // this.standBoundsY = 170;
                 this.buyerSpeed = 1.5;
+                this.generatedBuyer = false;
+                this.game.globals = new Map();
                 this.totalEarnings = 0;
                 this.kids = [
                     {
@@ -49,7 +52,7 @@
                     }
                 ];
 
-                this.buyers = [
+                this.people = [
                     {
                         key: 'buyer1'
                     },
@@ -118,7 +121,7 @@
                     }
                 ]
 
-                this.emotions = [
+                this.icons = [
                     {
                         key: 'angry'
                     },
@@ -159,6 +162,11 @@
                         key: 'wave'
                     }
                 ]
+
+                // let people;
+                // let id;
+                // let key;
+
             };
 
             gameScene.preload = function preload() {
@@ -224,57 +232,149 @@
                 //
                 // }
 
+                /*this.emotions = this.add.group(this.icons);
+                this.emotions.setDepth(1);
+                let emotions = this.emotions.getChildren();
+                for (let i = 0; i < emotions.length; i++) {
+                    let emotion = emotions[i];
+                    emotion.setInteractive();
+                    emotion.tween = this.tweens.add({
+                        targets: emotion,
+                        scaleX: 1.2,
+                        scaleY: 1.2,
+                        duration: 500,
+                        paused: true,
+                        loop: 10,
+                        yoyo: true
+                    });
+                    emotion.on('pointerdown', function (pointer) {
+                        // stop the seller's emotion
+                        emotion.setTexture('superhappy');
+                        // this.buyerEmotion.setTexture('wave');
+                        // this.tween.restart();
+                        this.time.delayedCall(2000, function () {
+                            emotion.setTexture('peace');
+                        }, [], this);
+                        // this.increaseEarnings(5);
+                        // buyer.boughtLemonade = true;
+
+                    });
+                    emotion.alpha = 0;
+                }
+    */
+
+                // this.buyers = this.add.group(this.people);
+                // this.buyers.setDepth(1);
+                // console.log(this.people[0].key);
+                // console.log(this.buyers.getChildren.length);
+                // this.buyers = this.add.group(this.people).getChildren();
+                //
+                for (let i = 0; i < this.people.length; i++) {
+                    let buyer = this.people[i];
+                    // console.log(buyer.key);
+                    this.game.globals.set(buyer.key, this.add.sprite(30 * (i + 1), 30 * (i + 1), buyer.key));
+                    this.game.globals.get(buyer.key).alpha = 0;
+                    this.game.globals.get(buyer.key).walkedUp = false;
+                    this.game.globals.get(buyer.key).walkedLeft = false;
+                    this.game.globals.get(buyer.key).didTransaction = false;
+                    this.game.globals.get(buyer.key).doneDeciding = false;
+                    this.anims.create({
+                            key: buyer.key + 'down',
+                            frames: this.anims.generateFrameNumbers(buyer.key, {
+                                start: 0,
+                                end: 2
+                            }),
+                            frameRate: 10,
+                            repeat: -1
+                        }
+                    );
+
+                    this.anims.create({
+                        key: buyer.key + 'left',
+                        frames: this.anims.generateFrameNumbers(buyer.key, {
+                            start: 3,
+                            end: 5
+                        }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: buyer.key + 'right',
+                        frames: this.anims.generateFrameNumbers(buyer.key, {
+                            start: 6,
+                            end: 8
+                        }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: buyer.key + 'up',
+                        frames: this.anims.generateFrameNumbers(buyer.key, {
+                            start: 9,
+                            end: 11
+                        }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+                }
+                // console.log(this.buyers[12]);
+                // this.buyers[12].x = 150;
+                // this.buyers[12].y = 150;
+                // this.add.sprite(150, 150, this.buyers[12].key);
+
 
                 // this.add.sprite(210, 470, 'gabe');
                 this.add.sprite(this.kidX, this.kidY, 'kid1');
 
-                this.buyer1 = this.physics.add.sprite(this.buyerStartX, this.buyerStartY, 'buyer1');
-                this.buyer2 = this.physics.add.sprite(190, 450, 'buyer2');
-                this.buyer1.walkedUp = false;
-                this.buyer1.walkedLeft = false;
-                this.buyer1.didTransaction = false;
-                this.buyer1.doneDeciding = false;
+                // this.buyer1 = this.physics.add.sprite(this.buyerStartX, this.buyerStartY, 'buyer1');
+                // this.buyer2 = this.physics.add.sprite(190, 450, 'buyer2');
+                // this.buyer1.walkedUp = false;
+                // this.buyer1.walkedLeft = false;
+                // this.buyer1.didTransaction = false;
+                // this.buyer1.doneDeciding = false;
 
-                this.anims.create({
-                        key: 'down',
-                        frames: this.anims.generateFrameNumbers('buyer1', {
-                            start: 0,
-                            end: 2
-                        }),
-                        frameRate: 10,
-                        repeat: -1
-                    }
-                );
-
-                this.anims.create({
-                    key: 'left',
-                    frames: this.anims.generateFrameNumbers('buyer1', {
-                        start: 3,
-                        end: 5
-                    }),
-                    frameRate: 10,
-                    repeat: -1
-                });
-
-                this.anims.create({
-                    key: 'right',
-                    frames: this.anims.generateFrameNumbers('buyer1', {
-                        start: 6,
-                        end: 8
-                    }),
-                    frameRate: 10,
-                    repeat: -1
-                });
-
-                this.anims.create({
-                    key: 'up',
-                    frames: this.anims.generateFrameNumbers('buyer1', {
-                        start: 9,
-                        end: 11
-                    }),
-                    frameRate: 10,
-                    repeat: -1
-                });
+                // this.anims.create({
+                //         key: 'down',
+                //         frames: this.anims.generateFrameNumbers('buyer1', {
+                //             start: 0,
+                //             end: 2
+                //         }),
+                //         frameRate: 10,
+                //         repeat: -1
+                //     }
+                // );
+                //
+                // this.anims.create({
+                //     key: 'left',
+                //     frames: this.anims.generateFrameNumbers('buyer1', {
+                //         start: 3,
+                //         end: 5
+                //     }),
+                //     frameRate: 10,
+                //     repeat: -1
+                // });
+                //
+                // this.anims.create({
+                //     key: 'right',
+                //     frames: this.anims.generateFrameNumbers('buyer1', {
+                //         start: 6,
+                //         end: 8
+                //     }),
+                //     frameRate: 10,
+                //     repeat: -1
+                // });
+                //
+                // this.anims.create({
+                //     key: 'up',
+                //     frames: this.anims.generateFrameNumbers('buyer1', {
+                //         start: 9,
+                //         end: 11
+                //     }),
+                //     frameRate: 10,
+                //     repeat: -1
+                // });
 
                 this.earningsText = this.add.text(0, 0, 'Total Earnings($): 0', {
                     fontFamily: 'Courier',
@@ -299,29 +399,60 @@
                 this.sellerEmotion.alpha = 0;
             };
 
+
             gameScene.update = function update() {
-                this.walkPath(this.buyer1);
-            };
+                // console.log(this.game.globals.get(key));
+                if (!this.generatedBuyer) {
+                    this.generateBuyer();
+                }
+                // user was generated
+                if (this.generatedBuyer) {
+                    this.walkPath(this.game.globals.get(this.key));
+                }
+            }
+
+
+             gameScene.generateBuyer = function () {
+                 // if there is no generated buyer, then generate a random one
+
+                 if (!this.generatedBuyer) {
+                     console.log("generating player");
+                     let people = this.people;
+                     let id = Math.floor(Math.random() * people.length);
+                     this.key = people[id].key;
+                     console.log("here");
+                     console.log(this.key);
+                     console.log(this.game.globals.get(this.key));
+                     this.game.globals.get(this.key).alpha = 1;
+                     this.game.globals.get(this.key).x = this.buyerStartX;
+                     this.game.globals.get(this.key).y = this.buyerStartY;
+
+                 }
+
+                 // user was generated
+                 this.generatedBuyer = true;
+                 // }
+             }
 
             gameScene.walkPath = function (buyer) {
                 // walk up y:190 is in front of stand, if he has not walked up
                 if (!buyer.walkedUp) {
                     this.walkForward(buyer);
-                    console.log("walking up");
+                    // console.log("walking up");
                 }
                 // buyer.walkedUp = true at this point
 
                 // Do transaction
                 if (buyer.walkedUp && !buyer.boughtLemonade && !buyer.gotAngry) {
                     this.doTransaction(buyer);
-                    console.log("buying");
+                    // console.log("buying");
                 }
                 // buyer.boughtLemonade = true at this point
 
                 // Once he walked up, he can walk left to start leaving
                 if (buyer.walkedUp && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedLeft) {
                     // buyer.time.delayedCall(2000, function() {
-                        this.walkLeft(buyer);
+                    this.walkLeft(buyer);
                     //     console.log("walking left");
                     // }, [], this);
                 }
@@ -330,18 +461,18 @@
                 // Walk back and exit scene
                 if (buyer.walkedUp && buyer.walkedLeft && (buyer.boughtLemonade || buyer.gotAngry) && !buyer.walkedBack) {
                     this.walkBack(buyer);
-                    console.log("walking back");
+                    // console.log("walking back");
                 }
             };
 
             // Buyer walking up
             gameScene.walkForward = function (buyer) {
                 if (buyer.y >= this.frontStandY) {
-                    buyer.anims.play('up', true);
+                    buyer.anims.play(this.key + 'up', true);
                     buyer.y -= this.buyerSpeed;
                 }
                 if (buyer.y <= this.frontStandY) {
-                    buyer.anims.play('up');
+                    buyer.anims.play(this.key + 'up');
                     buyer.walkedUp = true;
                 }
             };
@@ -350,7 +481,7 @@
             gameScene.walkLeft = function (buyer) {
                 if (buyer.x >= 190) {
                     this.buyerEmotion.x -= this.buyerSpeed;
-                    buyer.anims.play('left', true);
+                    buyer.anims.play(this.key + 'left', true);
                     buyer.x -= this.buyerSpeed;
                 }
                 if (buyer.x <= 190) {
@@ -361,7 +492,7 @@
             gameScene.walkBack = function (buyer) {
                 if (buyer.y <= 480) {
                     this.buyerEmotion.y += this.buyerSpeed;
-                    buyer.anims.play('down', true);
+                    buyer.anims.play(this.key + 'down', true);
                     buyer.y += this.buyerSpeed;
                 }
                 if (buyer.y >= 480) {
@@ -369,13 +500,16 @@
                     // remove sprite once exited scene
                     this.buyerEmotion.alpha = 0;
                     this.sellerEmotion.alpha = 0;
-                    buyer.disableBody(true, true);
+                    // buyer.disableBody(true, true);
+                    buyer.alpha = 0;
                     buyer.walkedBack = true;
+                    // reset the generated buyer value to false to generate a new one on update
+                    this.generatedBuyer = false;
                 }
             };
 
             gameScene.doTransaction = function (buyer) {
-                buyer.anims.play('up', false);
+                buyer.anims.play(this.key + 'up', false);
 
                 // do thinking
                 if (!buyer.doneDeciding) {
@@ -383,7 +517,7 @@
                     this.time.delayedCall(3000, function () {
                         buyer.doneDeciding = true;
                     }, [], this);
-                    console.log("deciding");
+                    // console.log("deciding");
                 }
 
                 if (buyer.doneDeciding && !buyer.boughtLemonade && !buyer.gotAngry) {
@@ -391,7 +525,7 @@
                     this.sellerEmotion.alpha = 1;
                     // if (this.sellerEmotion !== undefined) {
                     //
-                        this.tween.play();
+                    this.tween.play();
                     // }
 
                     // if buyer has not bought a lemonade then wait until he purchases one
@@ -410,7 +544,7 @@
                         }, gameScene);
 
                         // if 10 seconds pass and user did not click the money button, then seller leaves angry
-                        this.time.delayedCall(10000, function() {
+                        this.time.delayedCall(10000, function () {
                             if (!buyer.boughtLemonade) {
                                 console.log("im angry");
                                 this.sellerEmotion.setTexture('drop');
