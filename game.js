@@ -1,12 +1,24 @@
 {
     $(document).ready(() => {
             let lemonsEl = $('#lemons');
-            let sugarsEl = $('#sugars');
             let iceEl = $('#ice');
+            let sugarsEl = $('#sugars');
+            let sweetenerEl = $('#sweetener');
+            let honeyEl = $('#honey');
+            let strawberryEl = $('#strawberry');
+            let peachEl = $('#peach');
+            let blueberryEl = $('#blueberry');
+            let raspberryEl = $('#raspberry');
 
             console.log(lemonsEl[0].value);
             console.log(sugarsEl[0].value);
             console.log(iceEl[0].value);
+            console.log(sweetenerEl[0].value);
+            console.log(honeyEl[0].value);
+            console.log(strawberryEl[0].value);
+            console.log(peachEl[0].value);
+            console.log(blueberryEl[0].value);
+            console.log(raspberryEl[0].value);
 
 
             let gameScene = new Phaser.Scene('Game');
@@ -198,11 +210,6 @@
                         price: 5.5
                     }
                 ]
-
-                // let people;
-                // let id;
-                // let key;
-
             };
 
             gameScene.preload = function preload() {
@@ -255,6 +262,10 @@
                 this.load.image('wave', 'assets/emotions/wave.png');
                 this.load.image('money', 'assets/emotions/money.png');
                 this.load.image('drop', 'assets/emotions/drop.png');
+                // Load audio
+                this.load.audio('backgroundAudio', 'assets/audio/background-song.mp3');
+                this.load.audio('moneyAudio', 'assets/audio/money-sound.mp3');
+                this.load.audio('sadAudio', 'assets/audio/sad-sound.mp3');
             };
 
             gameScene.create = function create() {
@@ -312,17 +323,16 @@
                     });
                 }
 
-                // this.add.sprite(210, 470, 'gabe');
+                // add the sprite for the seller
                 this.add.sprite(this.kidX, this.kidY, 'kid1');
-
+                // add text box for counting earnings
                 this.earningsText = this.add.text(0, 0, 'Total Earnings($): 0', {
                     fontFamily: 'Courier',
                     fontSize: 28,
                     color: 'rgba(38, 76, 81, 1)',
                     backgroundColor: 'rgba(255, 178, 2, .7)'
                 });
-
-
+                // add buyer and seller emotions
                 this.buyerEmotion = this.add.sprite(this.buyerEmotionX, this.buyerEmotionY, 'deciding');
                 this.sellerEmotion = this.add.sprite(this.sellerEmotionX, this.sellerEmotionY, 'money');
                 this.sellerEmotion.setInteractive();
@@ -335,12 +345,28 @@
                     loop: 10,
                     yoyo: true
                 });
+                // initially hide the emotions until called on
                 this.buyerEmotion.alpha = 0;
                 this.sellerEmotion.alpha = 0;
+                // add sounds
+                this.backgroundAudio = this.sound.add('backgroundAudio');
+                this.moneyAudio = this.sound.add('moneyAudio');
+                this.sadAudio = this.sound.add('sadAudio');
+                this.moneyAudio.volume = 3;
+                this.sadAudio.volume = 3;
+                this.backgroundAudio.loop = true;
+                // console.log(this.backgroundAudio);
+                this.backgroundAudioPlaying = false;
             };
 
 
             gameScene.update = function update() {
+
+                if (!this.backgroundAudioPlaying) {
+                    this.backgroundAudio.play();
+                    this.backgroundAudioPlaying = true;
+                }
+
                 // console.log(this.game.globals.get(key));
                 if (!this.generatedBuyer) {
                     this.generateBuyer();
@@ -481,9 +507,11 @@
                     // if buyer has not bought a lemonade then wait until he purchases one
                     if (!buyer.boughtLemonade && !buyer.gotAngry) {
                         // sold a lemonade
+                        this.canPurchase(this.buyerChoice);
                         this.sellerEmotion.on('pointerdown', function (pointer) {
                             // console.log("clicked money");
                             // stop the seller's emotion
+
                             this.sellerEmotion.setTexture('superhappy');
                             this.buyerEmotion.setTexture('wave');
                             // this.tween.restart();
@@ -499,19 +527,17 @@
                                 console.log("im angry");
                                 this.sellerEmotion.setTexture('drop');
                                 this.buyerEmotion.setTexture('angry');
+                                this.sadAudio.play();
                                 buyer.gotAngry = true;
                             }
-                            // else {
-                            //     console.log("i'm good");
-                            // }
                         }, [], gameScene);
                     }
                 }
-
             };
 
             gameScene.increaseEarnings = function (earnings) {
                 this.earningsText.setText('Total Earnings($): ' + (this.totalEarnings + earnings));
+                this.moneyAudio.play();
                 this.counter++;
                 return earnings;
             };
@@ -523,10 +549,49 @@
                 console.log(this.buyerChoice.key + " id: " + id);
             };
 
-            gameScene.doSelection = function (buyer) {
+            gameScene.canPurchase = function (lemonade) {
+                console.log(lemonade);
+                let lemons = lemonsEl[0].value;
+                let sugars = sugarsEl[0].value;
+                let ice = iceEl[0].value;
+                let sweeteners = sweetenerEl[0].value;
+                let honey = honeyEl[0].value;
+                let strawberries = strawberryEl[0].value;
+                let peaches = peachEl[0].value;
+                let blueberries = blueberryEl[0].value;
+                let raspberries = raspberryEl[0].value;
+                switch (lemonade) {
+                    case 'lemon':
+                        console.log("lemon found");
+                        break;
+                    case 'strawberry':
+                        console.log("strawberry found");
+                        break;
+                    case 'blueberry':
+                        console.log("blueberry found");
+                        break;
+                    case 'peach':
+                        console.log("peach found");
+                        break;
+                    case 'raspberry':
+                        console.log("raspberry found");
+                        break;
+                    default:
+                        console.log("defaulting");
+                }
 
-                // this.emotion = this.add.sprite(220, 165, 'lemon');
-            };
+                console.log(lemons);
+                console.log(sugars);
+                console.log(ice);
+                console.log(sweeteners);
+                console.log(honey);
+                console.log(strawberries);
+                console.log(peaches);
+                console.log(blueberries);
+                console.log(raspberries);
+                let hasEnoughIngredients = true;
+
+            }
 
 
             let config = {
